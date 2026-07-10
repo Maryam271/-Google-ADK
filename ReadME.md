@@ -1,4 +1,4 @@
-# Google ADK Orchestra Workshop
+# Google ADK Orchestra 
 
 A hands-on implementation of six AI agent patterns built with Google's Agent Development Kit (ADK), covering single-agent tool use, multi-agent pipelines, parallel execution, feedback loops, and external tool integration via MCP.
 
