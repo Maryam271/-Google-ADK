@@ -25,17 +25,17 @@ warn() { echo "${YELLOW}!${RESET} $*"; }
 
 # ── 1. Python version check ───────────────────────────────────────────────
 say "Checking Python..."
-if ! command -v python3 >/dev/null; then
+if ! command -v python >/dev/null; then
     echo "${YELLOW}Python 3 not found. Install Python 3.10+ from python.org first.${RESET}"
     exit 1
 fi
-PY_VER=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+PY_VER=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
 ok "Python ${PY_VER} detected"
 
 # ── 2. Virtual environment ────────────────────────────────────────────────
 if [ ! -d .venv ]; then
     say "Creating virtual environment (.venv/)..."
-    python3 -m venv .venv
+    python -m venv .venv
     ok "venv created"
 else
     ok "venv already exists"

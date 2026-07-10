@@ -6,53 +6,53 @@ Rule: agents using google_search must have NO other tools.
 Rule: each parallel branch must use a UNIQUE output_key.
 
 Run: adk web  →  pick "parallel_research"
-Ask: "Research the future of renewable energy"
+Ask: "Research recipe ideas, travel destinations, and programming languages"
 """
 from google.adk.agents import LlmAgent, ParallelAgent, SequentialAgent
 from google.adk.tools import google_search
 
-MODEL = "gemini-flash-latest"
+MODEL = "gemini-2.5-flash-lite"
 
-renewable_researcher = LlmAgent(
-    name="RenewableResearcher",
-    model=MODEL,
-    description="Researches renewable energy trends.",
+recipe_researcher = LlmAgent(
+    name="recipe_ideas_researcher",
+    model=MODEL,adk
+    description="Researches recipe ideas trends.",
     instruction=(
-        "Research the 3 most important recent developments in renewable energy. "
+        "Research the 3 most important recent recipe ideas. "
         "Output a 2-sentence summary."
     ),
     tools=[google_search],
-    output_key="renewable_result",
+    output_key="recipe_result",
 )
 
-ev_researcher = LlmAgent(
-    name="EVResearcher",
+travel_researcher = LlmAgent(
+    name="travel_destinations_researcher",
     model=MODEL,
-    description="Researches electric vehicle technology trends.",
+    description="Researches travel destinations trends.",
     instruction=(
-        "Research the latest key advances in electric vehicle technology. "
+        "Research the latest  travel destinations. "
         "Output a 2-sentence summary."
     ),
     tools=[google_search],
-    output_key="ev_result",
+    output_key="travel_result",
 )
 
-carbon_researcher = LlmAgent(
-    name="CarbonResearcher",
+prog_researcher = LlmAgent(
+    name="programming_languages_researcher",
     model=MODEL,
-    description="Researches carbon capture methods.",
+    description="Researches programming languages methods and tehnique in recent AI trend.",
     instruction=(
-        "Research the most promising current carbon capture methods and breakthroughs. "
+        "Research the most promising current programming languages "
         "Output a 2-sentence summary."
     ),
     tools=[google_search],
-    output_key="carbon_result",
+    output_key="prog_result",
 )
 
 research_team = ParallelAgent(
     name="ResearchTeam",
-    description="Three concurrent researchers covering renewable energy, EVs, and carbon capture.",
-    sub_agents=[renewable_researcher, ev_researcher, carbon_researcher],
+    description="Three concurrent researchers covering Recipe Ideas, travel destinations, and carbon capture.",
+    sub_agents=[recipe_researcher, travel_researcher, prog_researcher],
 )
 
 synthesizer = LlmAgent(
@@ -61,9 +61,9 @@ synthesizer = LlmAgent(
     description="Combines parallel research into a structured report.",
     instruction=(
         "Combine the following research into one structured markdown report with three sections:\n\n"
-        "**Renewable Energy:**\n{renewable_result}\n\n"
-        "**Electric Vehicles:**\n{ev_result}\n\n"
-        "**Carbon Capture:**\n{carbon_result}\n\n"
+        "**Recipe Ideas:**\n{recipe_result}\n\n"
+        "**travel destinations:**\n{travel_result}\n\n"
+        "**programming languages:**\n{prog_result}\n\n"
         "Add a short 'Key Takeaways' section at the end."
     ),
 )

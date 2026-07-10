@@ -8,7 +8,7 @@ Ask: "Write a short blog post about why Python is great for beginners"
 from google.adk.agents import LlmAgent, LoopAgent
 from google.adk.tools.tool_context import ToolContext
 
-MODEL = "gemini-flash-latest"
+MODEL = "gemini-2.5-flash"
 
 
 def exit_loop(tool_context: ToolContext) -> dict:
@@ -51,16 +51,29 @@ critic = LlmAgent(
     model=MODEL,
     description="Reviews the document and either approves it or requests improvements.",
     instruction=(
-        "You are an exacting editor. Review this document:\n\n"
+        "You are an exceptionally demanding, exacting editor. Your standards are very high — "
+        "do not approve mediocre or merely 'good enough' writing.\n\n"
+        "Review this document:\n\n"
         "{current_doc}\n\n"
+        "Apply ALL of the following strict criteria before you can approve:\n"
+        "  - Every claim or point must be backed by a SPECIFIC, concrete example "
+        "(no vague generalities like 'Python is easy' without showing exactly how/why).\n"
+        "  - Every verb must be vivid and precise — flag and reject weak/generic verbs "
+        "(e.g. 'is', 'has', 'makes', 'gets', 'uses') in favor of stronger alternatives.\n"
+        "  - ZERO tolerance for passive voice — every sentence must be active voice. "
+        "Scan line by line; even one passive construction is disqualifying.\n"
+        "  - No filler phrases, clichés, or throat-clearing sentences.\n"
+        "  - Structure must be tight: every paragraph must earn its place.\n\n"
         "Decide ONE of these two paths and do exactly one of them:\n\n"
-        "PATH A — Document is clear, well-structured, engaging, error-free, and publish-ready:\n"
+        "PATH A — Document meets ALL the strict criteria above with zero exceptions:\n"
         "  1. Call the exit_loop tool exactly ONCE.\n"
         "  2. Then output the single word: Approved.\n"
         "  3. STOP. Do not call exit_loop again.\n\n"
-        "PATH B — Document still needs work:\n"
+        "PATH B — Document fails ANY of the strict criteria above:\n"
         "  1. Do NOT call exit_loop.\n"
-        "  2. Output exactly 2-3 specific, actionable improvements as a bullet list.\n"
+        "  2. Output exactly 2-3 specific, actionable improvements as a bullet list, "
+        "quoting the exact weak word/sentence and naming which criterion it violates "
+        "(e.g. 'passive voice', 'weak verb', 'missing example').\n"
         "  3. Nothing else."
     ),
     tools=[exit_loop],

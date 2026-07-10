@@ -6,7 +6,7 @@ Ask: "Write a function that checks if a number is prime"
 """
 from google.adk.agents import LlmAgent, SequentialAgent
 
-MODEL = "gemini-flash-latest"
+MODEL = "gemini-2.5-flash-lite"
 
 writer = LlmAgent(
     name="CodeWriter",
@@ -45,8 +45,23 @@ refactorer = LlmAgent(
     output_key="refactored_code",
 )
 
+doc_writer = LlmAgent(
+    name="DocWriter",
+    model=MODEL,
+    description="Writes a one-paragraph explanation of what the function does.",
+    instruction=(
+        "Here is the refactored code:\n\n"
+        "{refactored_code}\n\n"
+        "Write a single, clear paragraph (plain English, no code) explaining "
+        "what this function does, what inputs it takes, and what it returns. "
+        "Keep it concise and accessible to someone who has not read the code."
+    ),
+     output_key="explanation",
+)
+
+
 root_agent = SequentialAgent(
     name="CodePipeline",
-    description="A three-stage code pipeline: write → review → refactor.",
-    sub_agents=[writer, reviewer, refactorer],
+    description="A four-stage code pipeline: write → review → refactor → document_write.",
+    sub_agents=[writer, reviewer, refactorer,doc_writer ],
 )
